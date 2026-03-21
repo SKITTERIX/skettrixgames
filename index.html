@@ -1,30 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Flash Game</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Mario Remix 3 - Play Online</title>
     <style>
-        #player {
-            width: 800px;
-            height: 600px;
-            margin: 0 auto;
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a; /* Dark background looks better */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        #game-container {
+            width: 95vw;      /* Use 95% of screen width */
+            height: 95vh;     /* Use 95% of screen height */
+            max-width: 800px; /* Adjust this to the game's original width */
+            max-height: 600px;/* Adjust this to the game's original height */
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            background: #000;
+        }
+
+        /* Ensure Ruffle fills the container perfectly */
+        ruffle-player {
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
 <body>
-    <div id="player"></div>
+
+    <div id="game-container"></div>
 
     <script src="ruffle/ruffle.js"></script>
 
     <script>
         window.RufflePlayer = window.RufflePlayer || {};
+        
+        // This config fixes the cropping/scaling issues
+        window.RufflePlayer.config = {
+            "letterbox": "on",     // Adds black bars instead of cropping
+            "scale": "showAll",    // Forces the whole game to fit
+            "forceScale": true,    // Overrides internal Flash scaling
+            "autoPlay": "on",
+            "unmuteOverlay": "hidden"
+        };
+
         window.addEventListener("load", (event) => {
             const ruffle = window.RufflePlayer.newest();
             const player = ruffle.createPlayer();
-            const container = document.getElementById("player");
+            const container = document.getElementById("game-container");
             container.appendChild(player);
             
-            // Load your specific SWF file here
-            player.load("Super.swf");
+            // Make sure 'game.swf' matches your filename exactly
+            player.load("game.swf").then(() => {
+                console.log("Ruffle loaded successfully!");
+            }).catch((e) => {
+                console.error("Ruffle failed to load:", e);
+            });
         });
     </script>
 </body>
